@@ -6,8 +6,8 @@ import java.util.stream.DoubleStream;
 public class Simulator {
 
     private static double G = 1;
-    private static double EPS = .0001;
-    private static final double N = .001;
+    private static double EPS = 1E-04;
+    private static final double N = 1E-03;
 
     private static double[][] acc0;
     private static double[][] acc1;
@@ -92,7 +92,7 @@ public class Simulator {
 
             t[i] = N * (a / d);
         }
-        return Arrays.stream(t).min().orElse(0);
+        return Arrays.stream(t).min().orElse(1E-8);
     }
 
     private static double absVec(double[] vec) {
