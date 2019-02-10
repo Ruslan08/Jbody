@@ -16,8 +16,12 @@ public class CsvFile {
         this.path = path;
     }
 
-    public CsvFile(String path) throws URISyntaxException {
-        this(new URI(path));
+    public CsvFile(String path) {
+        try {
+            this.path = new URI(path);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public double[][] data() {
