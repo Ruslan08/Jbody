@@ -1,5 +1,8 @@
 package jbody;
 
+import java.util.Arrays;
+import java.util.stream.DoubleStream;
+
 public class Simulator {
 
     private static double G = 1;
@@ -25,9 +28,11 @@ public class Simulator {
         acc0 = acceleration(sourceData);
         deriv0 = firstDeriv(sourceData);
 
+        timeStep = timeStep(acc0, deriv0);
+
     }
 
-    public static double[][] acceleration(double[][] coords) {
+    private static double[][] acceleration(double[][] coords) {
         double [][] accelerations = new double[coords.length][3];    // {a_x, a_y, a_z}
 
         for (int i = 0; i < coords.length; i++) {
@@ -45,7 +50,7 @@ public class Simulator {
         return accelerations;
     }
 
-    public static double[][] firstDeriv(double[][] source) {
+    private static double[][] firstDeriv(double[][] source) {
         double [][] derivatives = new double[source.length][3];
 
         for (int i = 0; i < source.length; i++) {
@@ -79,12 +84,27 @@ public class Simulator {
         return derivatives;
     }
 
+    private static double timeStep(double[][] acc, double[][] deriv) {
+        double[] t = new double[acc.length];
+        for (int i = 0; i < acc.length; i++) {
+            double a = absVec(acc[i]);
+            double d = absVec(deriv[i]);
+
+            t[i] = N * (a / d);
+        }
+        return Arrays.stream(t).min().orElse(0);
+    }
+
+    private static double absVec(double[] vec) {
+        return Math.sqrt(DoubleStream.of(vec).map(d -> Math.pow(d, 2)).sum());
+    }
+
     /**
      * @param first     coordinates for first point
      * @param second    coordinates for second point
      * @return          distance between 2 points squared
      */
-    static double distance(double[] first, double[] second) {
+    private static double distance(double[] first, double[] second) {
         double x = Math.pow(second[0] - first[0], 2);
         double y = Math.pow(second[1] - first[1], 2);
         double z = Math.pow(second[2] - first[2], 2);
