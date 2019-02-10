@@ -23,7 +23,7 @@ public class Simulator {
         double[][] sourceData = new CsvFile(srcFile).data();
 
         acc0 = acceleration(sourceData);
-//        deriv0 = firstDeriv(sourceData);
+        deriv0 = firstDeriv(sourceData);
 
     }
 
@@ -43,6 +43,40 @@ public class Simulator {
             }
         }
         return accelerations;
+    }
+
+    public static double[][] firstDeriv(double[][] source) {
+        double [][] derivatives = new double[source.length][3];
+
+        for (int i = 0; i < source.length; i++) {
+            for (int j = 0; j < source.length; j++) {
+
+                if (j != i) {
+                    double x_ij = source[j][0] - source[i][0];
+                    double y_ij = source[j][1] - source[i][1];
+                    double z_ij = source[j][2] - source[i][2];
+
+                    double vx_ij = source[j][3] - source[i][3];
+                    double vy_ij = source[j][4] - source[i][4];
+                    double vz_ij = source[j][5] - source[i][5];
+
+                    double distance = distance(source[j], source[i]);
+
+                    double pow1_5 = Math.pow(distance + Math.pow(EPS, 2), 1.5);
+                    double pow2_5 = Math.pow(distance + Math.pow(EPS, 2), 2.5);
+                    double v_r = x_ij * vx_ij + y_ij * vy_ij + z_ij * vz_ij;
+
+                    double d_i_x = G * source[j][6] * (vx_ij / pow1_5 - 3 * v_r * (x_ij) / pow2_5);
+                    double d_i_y = G * source[j][6] * (vy_ij / pow1_5 - 3 * v_r * (y_ij) / pow2_5);
+                    double d_i_z = G * source[j][6] * (vz_ij / pow1_5 - 3 * v_r * (z_ij) / pow2_5);
+
+                    derivatives[i][0] += d_i_x;
+                    derivatives[i][1] += d_i_y;
+                    derivatives[i][2] += d_i_z;
+                }
+            }
+        }
+        return derivatives;
     }
 
     /**
