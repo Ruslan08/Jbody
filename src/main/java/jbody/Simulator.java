@@ -21,7 +21,7 @@ public class Simulator {
     public static void main(String[] args) {
 
         String srcFile = args[0];
-        Double time = Double.parseDouble(args[1]);
+        double time = Double.parseDouble(args[1]);
 
         double[][] sourceData = new CsvFile(srcFile).data();
 
@@ -29,6 +29,16 @@ public class Simulator {
         deriv0 = firstDeriv(sourceData);
 
         timeStep = timeStep(acc0, deriv0);
+
+        double timeStepSum = timeStep;
+        double timeCount = 0;
+        int stepCount = 0;
+
+        while (timeStepSum < time) {
+            predictions = prediction(sourceData, timeStep, acc0, deriv0);
+
+            timeStepSum += 0.001;
+        }
 
     }
 
@@ -93,6 +103,23 @@ public class Simulator {
             t[i] = N * (a / d);
         }
         return Arrays.stream(t).min().orElse(1E-8);
+    }
+
+    private static double[][] prediction(double[][] source, double timeStep, double[][] acc, double[][] deriv) {
+
+        double[][] predictions = new double[source.length][6];
+        double tSquaredInHalf = Math.pow(timeStep, 2) / 2;
+
+        for (int i = 0; i < source.length; i++) {
+            predictions[i][0] = source[i][0] + timeStep * source[i][3] + (tSquaredInHalf) * acc[i][0] + Math.pow(timeStep, 3) / 6 * deriv[i][0];
+            predictions[i][1] = source[i][1] + timeStep * source[i][4] + (tSquaredInHalf) * acc[i][1] + Math.pow(timeStep, 3) / 6 * deriv[i][1];
+            predictions[i][2] = source[i][2] + timeStep * source[i][5] + (tSquaredInHalf) * acc[i][2] + Math.pow(timeStep, 3) / 6 * deriv[i][2];
+
+            predictions[i][3] = source[i][3] + timeStep * acc[i][0] + (tSquaredInHalf) * deriv[i][0];
+            predictions[i][4] = source[i][4] + timeStep * acc[i][1] + (tSquaredInHalf) * deriv[i][1];
+            predictions[i][5] = source[i][5] + timeStep * acc[i][2] + (tSquaredInHalf) * deriv[i][2];
+        }
+        return predictions;
     }
 
     private static double absVec(double[] vec) {
