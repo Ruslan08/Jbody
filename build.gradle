@@ -18,5 +18,12 @@ jar {
     }
 }
 
+test {
+    testLogging {
+        events "PASSED", "STARTED", "FAILED", "SKIPPED"
+        exceptionFormat 'full'
+    }
+}
+
 group = 'net.sfedu'
 version = '1.0-SNAPSHOT'
