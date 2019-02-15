@@ -23,7 +23,7 @@ public class Simulator {
         String srcFile = args[0];
         double time = Double.parseDouble(args[1]);
 
-        double[][] sourceData = new CsvFile(srcFile).data();
+        var sourceData = new CsvFile(srcFile).data();
 
         acc0 = acceleration(sourceData);
         deriv0 = firstDeriv(sourceData);
@@ -43,7 +43,7 @@ public class Simulator {
     }
 
     private static double[][] acceleration(double[][] coords) {
-        double [][] accelerations = new double[coords.length][3];    // {a_x, a_y, a_z}
+        var accelerations = new double[coords.length][3];    // {a_x, a_y, a_z}
 
         for (int i = 0; i < coords.length; i++) {
             for (int j = 0; j < coords.length; j++) {
@@ -61,7 +61,7 @@ public class Simulator {
     }
 
     private static double[][] firstDeriv(double[][] source) {
-        double [][] derivatives = new double[source.length][3];
+        var derivatives = new double[source.length][3];
 
         for (int i = 0; i < source.length; i++) {
             for (int j = 0; j < source.length; j++) {
@@ -95,10 +95,10 @@ public class Simulator {
     }
 
     private static double timeStep(double[][] acc, double[][] deriv) {
-        double[] t = new double[acc.length];
+        var t = new double[acc.length];
         for (int i = 0; i < acc.length; i++) {
-            double a = absVec(acc[i]);
-            double d = absVec(deriv[i]);
+            var a = absVec(acc[i]);
+            var d = absVec(deriv[i]);
 
             t[i] = N * (a / d);
         }
@@ -107,8 +107,8 @@ public class Simulator {
 
     private static double[][] prediction(double[][] source, double timeStep, double[][] acc, double[][] deriv) {
 
-        double[][] predictions = new double[source.length][6];
-        double tSquaredInHalf = Math.pow(timeStep, 2) / 2;
+        var predictions = new double[source.length][6];
+        var tSquaredInHalf = Math.pow(timeStep, 2) / 2;
 
         for (int i = 0; i < source.length; i++) {
             predictions[i][0] = source[i][0] + timeStep * source[i][3] + (tSquaredInHalf) * acc[i][0] + Math.pow(timeStep, 3) / 6 * deriv[i][0];
@@ -132,9 +132,9 @@ public class Simulator {
      * @return          distance between 2 points squared
      */
     private static double distance(double[] first, double[] second) {
-        double x = Math.pow(second[0] - first[0], 2);
-        double y = Math.pow(second[1] - first[1], 2);
-        double z = Math.pow(second[2] - first[2], 2);
+        var x = Math.pow(second[0] - first[0], 2);
+        var y = Math.pow(second[1] - first[1], 2);
+        var z = Math.pow(second[2] - first[2], 2);
         return x + y + z;
     }
 
