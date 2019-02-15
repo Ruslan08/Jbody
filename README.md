@@ -1,4 +1,4 @@
-# Jbody
+# Jbody ![1](https://travis-ci.org/Ruslan08/Jbody.svg?branch=master)
 
 N-body algorithm is taken from research article [Performance Analysis of Direct N-Body Algorithms on Special-Purpose Supercomputers](https://arxiv.org/abs/astro-ph/0608125)
 
