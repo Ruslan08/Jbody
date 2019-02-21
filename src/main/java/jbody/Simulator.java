@@ -153,6 +153,16 @@ public class Simulator {
         return Arrays.stream(t).min().orElse(1E-10);
     }
 
+    private static double[][] secondDeriv() {
+        double [][] secondDeriv = new double[acc0.length][3];
+        for (int i = 0; i < acc0.length; i++) {
+            for (int n = 0; n < 3; n++) {
+                secondDeriv[i][n] = (-6 * (acc0[i][n] - acc1[i][n]) - timeStep * (4 * deriv0[i][n] + 2 * deriv1[i][n])) / Math.pow(timeStep, 2);
+            }
+        }
+        return secondDeriv;
+    }
+
     private static double absVec(double[] vec) {
         return Math.sqrt(DoubleStream.of(vec).map(d -> Math.pow(d, 2)).sum());
     }
