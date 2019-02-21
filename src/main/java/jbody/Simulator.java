@@ -36,6 +36,11 @@ public class Simulator {
 
         while (timeStepSum < time) {
             predictions = prediction(sourceData, timeStep, acc0, deriv0);
+            acc1 = acceleration(predictions);
+            deriv1 = firstDeriv(predictions);
+
+
+            timeStep = updateTimeStep();
 
             timeStepSum += 0.001;
         }
@@ -120,6 +125,32 @@ public class Simulator {
             predictions[i][5] = source[i][5] + timeStep * acc[i][2] + (tSquaredInHalf) * deriv[i][2];
         }
         return predictions;
+    }
+
+    private static double updateTimeStep() {
+        double[] t = new double[acc1.length];
+        for (int i = 0; i < acc1.length; i++) {
+            double a = absVec(acc1[i]);
+            double d = absVec(deriv1[i]);
+            double td = absVec(thirdDeriv[i]);
+            double [][] secondDeriv1 = new double[acc1.length][3];
+
+            for (int n = 0; n < 3; n++) {
+                secondDeriv1[i][n] = secondDeriv[i][n] + timeStep * thirdDeriv[i][n];
+            }
+
+            double sd1 = absVec(secondDeriv1[i]);
+
+            t[i] = 0.01 * Math.sqrt((
+                            (a * sd1 + Math.pow(d, 2)) /
+                                    (d * td + Math.pow(sd1, 2))
+                    )
+            );
+            if (Double.isNaN(t[i])) {
+                t[i] = Double.MAX_VALUE;
+            }
+        }
+        return Arrays.stream(t).min().orElse(1E-10);
     }
 
     private static double absVec(double[] vec) {
