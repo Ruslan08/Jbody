@@ -38,11 +38,13 @@ public class Simulator {
             predictions = prediction(sourceData, timeStep, acc0, deriv0);
             acc1 = acceleration(predictions);
             deriv1 = firstDeriv(predictions);
+            correction(sourceData);
 
-
+            acc0 = acc1;
+            deriv0 = deriv1;
             timeStep = updateTimeStep();
 
-            timeStepSum += 0.001;
+            timeStepSum += timeStep;
         }
 
     }
@@ -153,6 +155,21 @@ public class Simulator {
         return Arrays.stream(t).min().orElse(1E-10);
     }
 
+    private static void correction(double[][] coordinates) {
+        secondDeriv = secondDeriv();
+        thirdDeriv = thirdDeriv();
+        for (int i = 0; i < coordinates.length; i++) {
+            for (int n = 0; n < 3; n++) {
+                coordinates[i][n] = predictions[i][n] + Math.pow(timeStep, 4) / 24 * secondDeriv[i][n]
+                        + Math.pow(timeStep, 5) / 120 * thirdDeriv[i][n];
+            }
+            for (int n = 3; n < 6; n++) {
+                coordinates[i][n] = predictions[i][n] + Math.pow(timeStep, 3) / 6 * secondDeriv[i][n-3]
+                        + Math.pow(timeStep, 4) / 24 * thirdDeriv[i][n-3];
+            }
+        }
+    }
+
     private static double[][] secondDeriv() {
         double [][] secondDeriv = new double[acc0.length][3];
         for (int i = 0; i < acc0.length; i++) {
@@ -161,6 +178,16 @@ public class Simulator {
             }
         }
         return secondDeriv;
+    }
+
+    private static double[][] thirdDeriv() {
+        double [][] thirdDeriv = new double[acc0.length][3];
+        for (int i = 0; i < acc0.length; i++) {
+            for (int n = 0; n < 3; n++) {
+                thirdDeriv[i][n] = (12 * (acc0[i][n] - acc1[i][n]) + 6 * timeStep * (deriv0[i][n] + deriv1[i][n])) / Math.pow(timeStep, 3);
+            }
+        }
+        return thirdDeriv;
     }
 
     private static double absVec(double[] vec) {
