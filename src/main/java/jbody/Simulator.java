@@ -1,5 +1,7 @@
 package jbody;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
@@ -45,6 +47,12 @@ public class Simulator {
             timeStep = updateTimeStep();
 
             timeStepSum += timeStep;
+
+            stepCount++;
+            if (timeStepSum > timeCount) {
+                dataSnapshot(srcFile, sourceData, timeStepSum, stepCount);
+                timeCount += 0.1;
+            }
         }
 
     }
@@ -204,6 +212,15 @@ public class Simulator {
         var y = Math.pow(second[1] - first[1], 2);
         var z = Math.pow(second[2] - first[2], 2);
         return x + y + z;
+    }
+
+    private static void dataSnapshot(String srcFile, double[][] sourceData, double timeStepSum, int stepCount) {
+        CsvFile snapshotDataFile = new CsvFile(
+                new DirectoryNextToFile(srcFile, "result").pathToDirectory()
+                        .resolve("t" + new BigDecimal(timeStepSum).setScale(2, RoundingMode.HALF_UP) +
+                                "s" + stepCount +
+                                ".csv"));
+        snapshotDataFile.writeData(sourceData);
     }
 
 }
