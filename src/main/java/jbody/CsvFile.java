@@ -29,6 +29,22 @@ public class CsvFile {
         }
     }
 
+    public double[][] newData() {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(path));
+            double[][] data = new double[7][lines.size()];
+            for (int i = 0; i < lines.size(); i++) {
+                String[] split = lines.get(i).replace("\"", "").split(",");
+                for (int j = 0; j < 7; j++) {
+                    data[j][i] = parseDouble(split[j]);
+                }
+            }
+            return data;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public double[][] data() {
         try {
             return Files.lines(Paths.get(path))
