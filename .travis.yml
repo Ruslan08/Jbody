@@ -5,7 +5,7 @@ jdk:
   - oraclejdk11
 
 script:
-  - ./gradlew build
+  - mvn clean package
 
 before_install:
   - chmod +x gradlew
