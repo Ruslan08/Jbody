@@ -6,6 +6,3 @@ jdk:
 
 script:
   - mvn clean package
-
-before_install:
-  - chmod +x gradlew
