@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -18,8 +17,8 @@ public class SnapshotCsvFileTest {
     private URI file;
 
     @Before
-    public void init() throws URISyntaxException {
-        this.file = ClassLoader.getSystemResource("testOutPut.csv").toURI();
+    public void init() {
+        this.file = Path.of("src/test/resources", "testOutPut.csv").toUri();
     }
 
     @Test

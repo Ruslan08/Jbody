@@ -1,7 +1,6 @@
 package data;
 
 import jbody.data.NaturalCsvFile;
-import jbody.DirectoryNextToFile;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
