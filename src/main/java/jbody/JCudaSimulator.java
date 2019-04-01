@@ -2,6 +2,8 @@ package jbody;
 
 //import static
 
+import jbody.data.NaturalCsvFile;
+import jbody.data.TransposedCsvFile;
 import jcuda.Pointer;
 import jcuda.Sizeof;
 import jcuda.driver.CUcontext;
@@ -29,12 +31,12 @@ public class JCudaSimulator {
 
     public static void main(String[] args) {
 
+        init();
         String srcFile = args[0];
         double time = Double.parseDouble(args[1]);
 
-        var sourceData = new CsvFile(srcFile).newData();
+        var sourceData = new TransposedCsvFile(srcFile).data();
 
-        init();
 
         acc0 = acceleration(sourceData);
 //        deriv0 = firstDeriv(sourceData);
@@ -48,6 +50,7 @@ public class JCudaSimulator {
     }
 
     private static void init() {
+        System.load("D:\\user\\IdeaProjects\\Jbody\\src\\main\\resources\\JCudaDriver-0.9.2-windows-x86_64.dll");
         JCudaDriver.setExceptionsEnabled(true);
         JCudaDriver.cuInit(0);
 
@@ -78,21 +81,6 @@ public class JCudaSimulator {
 
         System.out.println("AFTER " + Arrays.toString(coords[0]));
 
-//        var accelerations = new double[coords.length][3];    // {a_x, a_y, a_z}
-//
-//        for (int i = 0; i < coords.length; i++) {
-//            for (int j = 0; j < coords.length; j++) {
-//                if (j != i) {
-//                    double distance = distance(coords[j], coords[i]);
-//                    for (int n = 0; n < 3; n++) {  // x,y,z
-//                        double xij = coords[j][n] - coords[i][n];
-//                        double ai = G * coords[j][6] * xij / Math.pow(distance + Math.pow(EPS, 2), 1.5);
-//                        accelerations[i][n] += ai;
-//                    }
-//                }
-//            }
-//        }
-//        return accelerations;
         return null;
     }
 

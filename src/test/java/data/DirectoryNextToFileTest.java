@@ -1,3 +1,5 @@
+package data;
+
 import jbody.DirectoryNextToFile;
 import org.junit.Assert;
 import org.junit.Before;
@@ -5,7 +7,7 @@ import org.junit.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 public class DirectoryNextToFileTest {
 
@@ -20,7 +22,7 @@ public class DirectoryNextToFileTest {
     public void pathToDirectoryTest() {
         URI directory = new DirectoryNextToFile(file, "result").pathToDirectory();
 
-        Assert.assertEquals(Paths.get(directory), Paths.get(file).getParent().resolve("result"));
+        Assert.assertEquals(Path.of(directory), Path.of(file).getParent().resolve("result"));
     }
 
 }

@@ -2,7 +2,7 @@ package jbody;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * Represent the directory next to the source file
@@ -27,7 +27,7 @@ public class DirectoryNextToFile {
     }
 
     public URI pathToDirectory() {
-        return Paths.get(sourcePath)
+        return Path.of(sourcePath)
                 .getParent()
                 .resolve(directoryName)
                 .toUri();

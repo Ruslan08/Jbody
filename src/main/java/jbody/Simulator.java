@@ -1,5 +1,8 @@
 package jbody;
 
+import jbody.data.NaturalCsvFile;
+import jbody.data.SnapshotCsvFile;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
@@ -25,7 +28,7 @@ public class Simulator {
         String srcFile = args[0];
         double time = Double.parseDouble(args[1]);
 
-        var sourceData = new CsvFile(srcFile).data();
+        var sourceData = new NaturalCsvFile(srcFile).data();
 
         acc0 = acceleration(sourceData);
         deriv0 = firstDeriv(sourceData);
@@ -215,7 +218,7 @@ public class Simulator {
     }
 
     private static void dataSnapshot(String srcFile, double[][] sourceData, double timeStepSum, int stepCount) {
-        CsvFile snapshotDataFile = new CsvFile(
+        SnapshotCsvFile snapshotDataFile = new SnapshotCsvFile(
                 new DirectoryNextToFile(srcFile, "result").pathToDirectory()
                         .resolve("t" + new BigDecimal(timeStepSum).setScale(2, RoundingMode.HALF_UP) +
                                 "s" + stepCount +
